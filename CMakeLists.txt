@@ -13,4 +13,5 @@ set(Boost_USE_STATIC_RUNTIME    OFF)
 
 #add_executable(qprocessor main.cpp src/MultiQueueProcessor.h src/OrderTraits.h src/MultiQueue.h)
 #target_include_directories(mqprocessor PUBLIC src )
+add_subdirectory(src)
 add_subdirectory(tests)
