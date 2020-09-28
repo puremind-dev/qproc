@@ -38,7 +38,7 @@ namespace queue_processor{
 
         bool queue(const Key &key, const Value &value) {
             auto & queue = queues[key];
-            return insert(queue.second, value);
+            return insert(queue, value);
         }
 
         std::optional <Value> deque(const Key &id) {
@@ -46,7 +46,7 @@ namespace queue_processor{
 
             if (auto queue = queues.find(id); queue != queues.end()) {
                 result = *(queue->second.begin());
-                clean(queue->second);
+                clean(queue);
             }
 
             return result;
@@ -66,11 +66,11 @@ namespace queue_processor{
             return true;
         }
 
-        void clean(ValueContainer &queue){
-            if (queue->second.size() == 1) {
-                queues.erase(queue);
+        void clean(typename QueueContainer::iterator &itQueue){
+            if (itQueue->second.size() == 1) {
+                queues.erase(itQueue);
             } else{
-                queue.erase(queue.begin());
+                itQueue->second.erase(itQueue->second.begin());
             }
         }
     };

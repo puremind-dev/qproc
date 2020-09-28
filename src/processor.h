@@ -50,13 +50,16 @@ namespace queue_processor {
         QueueProcessor &operator=(const QueueProcessor &) = delete;
 
 
-        void subscribe(const Key &key, const Consumer<Key, Value> &consumer) {
+        bool subscribe(const Key &key, const Consumer<Key, Value> &consumer) {
+            bool state{false};
             {
                 std::lock_guard<std::mutex> lck(operGuard);
-                consumers.insert({key, consumer});
+                state = consumers.insert({key, consumer}).second;
             }
 
             cv.notify_one();
+
+            return  state;
         }
 
         void unsubscribe(const Key &key) {
@@ -108,9 +111,9 @@ namespace queue_processor {
         }
 
         void processItem() {
-            for(const auto & consumer : consumers) {
-                if (auto value = queues.deque(consumers.first); value) {
-                    consumer(consumers.first, *value);
+            for(const auto & [id, operation] : consumers) {
+                if (auto value = queues.deque(id); value) {
+                    operation(id, *value);
                 }
             }
         }
