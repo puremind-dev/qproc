@@ -85,6 +85,7 @@
 
 #*/cmake-build-gidebug/*
 cmake-build-debug/*
+cmake-build-release/*
 
 # Gradle:
 .idea/gradle.xml
