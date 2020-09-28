@@ -25,12 +25,10 @@ namespace queue_processor {
 
     template<typename Key, typename Value, typename Order>
     struct ConsumerOrderTraits {
-        static_assert(!std::is_same<Order, sequential>::value, "Class supports only unique and unique_hash orderes");
-        static_assert(!std::is_same<Order, ordered>::value, "Class supports only unique and unique_hash orderes");
-        static_assert(!std::is_same<Order, non_unique_hash>::value,
-                      "Class supports only unique and unique_hash orderes");
-        static_assert(std::is_same<Order, unique>::value || std::is_same<Order, unique_hash>::value,
-                      "Unknown order type");
+        static_assert(
+                std::is_same<Order, unique>::value ||
+                std::is_same<Order, non_unique_hash>::value,
+                "Unknown order type or type does not supports");
 
         typedef std::unordered_map <Key, Value> type;
     };
@@ -48,8 +46,6 @@ namespace queue_processor {
     template<typename Key, typename Order>
     struct ValueOrderTraits {
         static_assert(
-//                       std::is_same<Order, unique>::value ||
-//                       std::is_same<Order, unique_hash>::value ||
                        std::is_same<Order, sequential>::value ||
                        std::is_same<Order, ordered>::value ||
                        std::is_same<Order, non_unique_hash>::value,
@@ -57,11 +53,6 @@ namespace queue_processor {
 
         typedef std::deque <Key> type;
     };
-
-//    template<typename Key>
-//    struct ValueOrderTraits<Key, unique_hash> {
-//        typedef std::unordered_set <Key> type;
-//    };
 
     template<typename Key>
     struct ValueOrderTraits<Key, non_unique_hash> {
@@ -72,11 +63,6 @@ namespace queue_processor {
     struct ValueOrderTraits<Key, sequential> {
         typedef std::deque <Key> type;
     };
-
-//    template<typename Key>
-//    struct ValueOrderTraits<Key, unique> {
-//        typedef std::set <Key> type;
-//    };
 
     template<typename Key>
     struct ValueOrderTraits<Key, ordered> {
