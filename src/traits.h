@@ -27,7 +27,7 @@ namespace queue_processor {
     struct ConsumerOrderTraits {
         static_assert(
                 std::is_same<Order, unique>::value ||
-                std::is_same<Order, non_unique_hash>::value,
+                std::is_same<Order, unique_hash>::value,
                 "Unknown order type or type does not supports");
 
         typedef std::unordered_map <Key, Value> type;
